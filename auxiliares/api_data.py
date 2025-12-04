@@ -2,4 +2,5 @@ user = 'root'
 password = ''
 server = 'localhost'
 port = 3306
-database = 'api_iei_172_n2'
+database = 'api_iei_171_n2'
+url_usuarios = 'https://jsonplaceholder.typicode.com/users'

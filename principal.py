@@ -1,4 +1,5 @@
 from negocio import obtener_data_usuarios,listado_usuarios
+from auxiliares import url_usuarios
 
-obtener_data_usuarios('https://jsonplaceholder.typicode.com/users')
+obtener_data_usuarios(url_usuarios)
 listado_usuarios()
