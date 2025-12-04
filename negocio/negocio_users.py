@@ -6,7 +6,7 @@ from datos import insertar_objeto, obtener_listado_objetos, obtener_user_name
 from negocio import crear_geolocalizacion, crear_direccion, crear_compania
 
 
-def obtener_data_usuarios(url):
+def obtener_data_usuarios_api(url):
     respuesta = requests.get(url)
     if respuesta.status_code == 200:
         print("Solicitud correcta, procesando data Users...")
@@ -31,7 +31,7 @@ def obtener_data_usuarios(url):
                 user['company']['bs']
             )
 
-            crear_usuario(
+            crear_usuario_db(
                 user['name'],
                 user['username'],
                 user['email'],
@@ -48,14 +48,67 @@ def obtener_data_usuarios(url):
             f"La solicitud falló con el siguiente código de error: {respuesta.status_code}")
 
 
-def buscar_user_name(nombre):
+def crear_user_api(url):
+    name = input('Ingrese su nombre: ')
+    username = input('Ingrese nombre usuario: ')
+    email = input('Ingrese correo: ')
+    phone = input('Ingrese celular: ')
+    website = input('Ingrese página web: ')
+    user = {
+        'name': name,
+        'username': username,
+        'email': email,
+        'phone': phone,
+        'website': website
+    }
+    respuesta = requests.post(url, data=user)
+    if respuesta.status_code==201:
+        print(respuesta.text)
+
+
+def modificar_user_api(url):
+    id_user = input('Ingrese ID usuario: ')
+    try:
+        id_user=int(id_user)
+    except:
+        print('Ingrese un número entero...')
+    name = input('Ingrese su nombre: ')
+    username = input('Ingrese nombre usuario: ')
+    email = input('Ingrese correo: ')
+    phone = input('Ingrese celular: ')
+    website = input('Ingrese página web: ')
+    user = {
+        'name': name,
+        'username': username,
+        'email': email,
+        'phone': phone,
+        'website': website
+    }
+    url = f'{url}/{id_user}'
+    respuesta = requests.put(url, data=user)
+    if respuesta.status_code==200:
+        print(respuesta.text)
+
+
+def eliminar_user_api(url):
+    id_user = input('Ingrese ID usuario: ')
+    try:
+        id_user=int(id_user)
+    except:
+        print('Ingrese un número entero...')
+    url = f'{url}/{id_user}'
+    respuesta = requests.delete(url)
+    print(respuesta.text)
+
+
+def buscar_user_name_db(nombre):
     if nombre != '':
         user = obtener_user_name(nombre)
         if user != None:
             return user
 
 
-def listado_usuarios():
+def listado_usuarios_db():
     tabla_usuarios = PrettyTable()
     tabla_usuarios.field_names = [
         'N°', 'Nombre', 'Usuario', 'Correo', 'Teléfono', 'Sitio Web']
@@ -68,8 +121,8 @@ def listado_usuarios():
         print(tabla_usuarios)
 
 
-def crear_usuario(nombre, nombre_usuario, correo, telefono, sitio_web, id_direccion, id_compania):
-    user = buscar_user_name(nombre)
+def crear_usuario_db(nombre, nombre_usuario, correo, telefono, sitio_web, id_direccion, id_compania):
+    user = buscar_user_name_db(nombre)
     if not user:
         usuario = User(
             name=nombre,
