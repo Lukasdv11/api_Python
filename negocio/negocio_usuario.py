@@ -2,29 +2,51 @@ import bcrypt
 import getpass
 from modelos import Usuario
 from datos import insertar_objeto, obtener_usuario_nombre
+from auxiliares import validar_correo
 
 
 def registrar_usuario():
-    ingreso_nombre = input('Ingrese Nombre Completo: ')
-    ingreso_nombre_usuario = input('Ingrese Nombre Usuario: ')
-    ingreso_email = input('Ingrese Correo Electrónico: ')
-    ingreso_contrasena = getpass.getpass('Ingrese Contraseña: ')
+    valido = False
+    while valido == False:
+        mensaje = '\nErrores en la creación del Usuario: \n'
+        ingreso_nombre = input('Ingrese Nombre Completo: ')
+        if ingreso_nombre == '':
+            mensaje = mensaje + 'Nombre Completo es OBLIGATORIO.\n'
+            
+        ingreso_nombre_usuario = input('Ingrese Nombre Usuario: ')
+        if ingreso_nombre_usuario == '':
+            mensaje = mensaje + 'Nombre Usuario es OBLIGATORIO.\n'
+            
+        ingreso_email = input('Ingrese Correo Electrónico: ')
+        if ingreso_email == '':
+            mensaje = mensaje + 'Correo electrónico es OBLIGATORIO.\n'
+        elif validar_correo(ingreso_email) != True:
+            mensaje = mensaje + 'Correo electrónico INVÁLIDO.\n'
+            
+        ingreso_contrasena = getpass.getpass('Ingrese Contraseña: ')
+        if ingreso_contrasena == '':
+            mensaje = mensaje + 'Contraseña es OBLIGATORIA.\n'
 
-    if ingreso_nombre != '' and ingreso_nombre_usuario != '' and ingreso_email != '' and ingreso_contrasena != '':
-        salt = bcrypt.gensalt()
-        hashed = bcrypt.hashpw(ingreso_contrasena.encode('utf-8'), salt)
-        nuevo_usuario = Usuario(
-            nombre=ingreso_nombre,
-            usuario=ingreso_nombre_usuario,
-            email=ingreso_email,
-            contrasena_hash=hashed,
-            contrasena_salt=salt)
+        if mensaje == '\nErrores en la creación del Usuario: \n':
+            valido = True
+            salt = bcrypt.gensalt()
+            hashed = bcrypt.hashpw(ingreso_contrasena.encode('utf-8'), salt)
+            nuevo_usuario = Usuario(
+                nombre=ingreso_nombre,
+                usuario=ingreso_nombre_usuario,
+                email=ingreso_email,
+                contrasena_hash=hashed,
+                contrasena_salt=salt)
 
-        try:
-            id_usuario = insertar_objeto(nuevo_usuario)
-            return id_usuario
-        except Exception as error:
-            print(f'Error al guardar al usuario: {error}')
+            try:
+                id_usuario = insertar_objeto(nuevo_usuario)
+                return id_usuario
+            except Exception as error:
+                print(f'Error al guardar al usuario: {error}')
+        else:
+            print(mensaje)
+            print('\nVuelva a ingresar los datos')
+            mensaje = ''
 
 
 def iniciar_sesion():

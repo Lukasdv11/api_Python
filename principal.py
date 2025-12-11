@@ -1,6 +1,7 @@
 from negocio import registrar_usuario, iniciar_sesion
 from interfaces_usuario import menu_inicial
-
+from auxiliares import validar_correo
+from servicios.serper import busqueda
 # obtener_data_usuarios_api(url_usuarios)
 # listado_usuarios_db()
 # crear_user_api(url_usuarios)
@@ -21,6 +22,14 @@ def app():
             inicio_sesion = iniciar_sesion()
             if inicio_sesion == True:
                 print('Iniciando Sistema...')
+        elif opcion_inicial == '3':
+            # ingreso_email = input('Ingrese Correo Electrónico: ')
+            # respuesta = validar_correo(ingreso_email)
+            # if respuesta == True:
+            #     print('Correo Válido.')
+            # else:
+            #     print('Correo Inválido.')
+            busqueda()
         elif opcion_inicial == '0':
             print('Saliendo...')
             break
