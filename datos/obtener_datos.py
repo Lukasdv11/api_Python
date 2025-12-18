@@ -18,7 +18,7 @@ def obtener_user_name(valor):
 
 def obtener_usuario_nombre(valor):
     user_identificado = sesion.query(Usuario).filter(
-        Usuario.usuario.like(f'%{valor}%')).first()
+        Usuario.usuario==valor).first()
     if user_identificado != None and isinstance(user_identificado, Usuario):
         return user_identificado
 

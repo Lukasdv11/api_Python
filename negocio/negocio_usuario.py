@@ -52,10 +52,10 @@ def registrar_usuario():
 def iniciar_sesion():
     while True:
         ingreso_nombre_usuario = input('Ingrese Nombre Usuario: ')
-        ingreso_contrasena = getpass.getpass('Ingrese Contraseña: ')
 
         usuario = obtener_usuario_nombre(ingreso_nombre_usuario)
         if usuario:
+            ingreso_contrasena = getpass.getpass('Ingrese Contraseña: ')
             if bcrypt.checkpw(ingreso_contrasena.encode('utf-8'), usuario.contrasena_hash.encode('utf-8')):
                 print('Acceso Concedido!')
                 return True
