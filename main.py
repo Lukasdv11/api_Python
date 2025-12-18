@@ -29,6 +29,7 @@ def menu_sistema_loop():
         elif opcion == "3":
             # PUT usuario en la API
             modificar_user_api(url_users)
+            listado_usuarios_db()
         elif opcion == "4":
             # DELETE usuario en la API
             eliminar_user_api(url_users)

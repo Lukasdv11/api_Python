@@ -4,7 +4,7 @@ from servicios import get_users_api, post_user_api, put_user_api, delete_user_ap
 from modelos import User
 from datos import insertar_objeto, obtener_listado_objetos, obtener_user_name
 from negocio import crear_geolocalizacion, crear_direccion, crear_compania
-
+from datos.conexion import sesion  
 
 def obtener_users_api():
     users = get_users_api()
@@ -63,13 +63,16 @@ def modificar_user_api(url):
     id_user = input('Ingrese ID usuario: ')
     try:
         id_user = int(id_user)
-    except:
+    except ValueError:
         print('Ingrese un número entero...')
+        return
+
     name = input('Ingrese su nombre: ')
     username = input('Ingrese nombre usuario: ')
     email = input('Ingrese correo: ')
     phone = input('Ingrese celular: ')
     website = input('Ingrese página web: ')
+
     user = {
         'name': name,
         'username': username,
@@ -79,13 +82,33 @@ def modificar_user_api(url):
     }
     put_user_api(id_user, user)
 
+    user_db = sesion.query(User).get(id_user)
+
+    if user_db:
+        user_db.name = name
+        user_db.username = username
+        user_db.email = email
+        user_db.phone = phone
+        user_db.website = website
+
+        try:
+            sesion.commit()
+            print("Usuario actualizado en la base de datos.")
+        except Exception as e:
+            sesion.rollback()
+            print(f"Error al actualizar usuario en BD: {e}")
+    else:
+        print("Ese usuario no existe en la BD; solo se envió el PUT a la API.")
+
 
 def eliminar_user_api(url):
     id_user = input('Ingrese ID usuario: ')
     try:
         id_user = int(id_user)
-    except:
+    except ValueError:
         print('Ingrese un número entero...')
+        return
+
     delete_user_api(id_user)
 
 
